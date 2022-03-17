@@ -1,0 +1,9 @@
+libssl-dev
+qemu-system-arm
+qemu-utils
+gcc-arm-none-eabi
+build-essential
+cmake
+bison
+flex
+u-boot
