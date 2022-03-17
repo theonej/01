@@ -2,7 +2,7 @@
 
 The body maintains a **body info** table that contains information **appendages** can use to join the body.
 
-The format of the body info tale is as follows:
+The format of the body info table is as follows:
 
 | name  | mac   | join certificate  | join certificate public key   |
 |-------|-------|-------------------|-------------------------------|

@@ -19,7 +19,7 @@ Each entry in the appendage table has the following format:
 |-------|-------|---------------|---------------|-----------------------|---------------------|--------------|
 | 4 b   | 6b    | 4b            | 4096b         | 4b                    | 4b                  | 400b         |
 
-memory size defaults to 4gb, but should be set by the appendage that is registering itself to the body, as different appendages may require different memory sizes.
+memory size should be set by the appendage that is registering itself to the body, as different appendages may require different memory sizes.
 
 #
 

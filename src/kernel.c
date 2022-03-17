@@ -1,19 +1,10 @@
 #include <stdint.h>
-
-volatile uint8_t *uart0 = (uint8_t *)0x10009000;
-
-void write(const char *str)
-{
-    while (*str)
-    {
-        *uart0 = *str++;
-    }
-}
+#include "text/console.h"
 
 int main()
 {
-    const char *message = "hello from bare metal\n";
-    write(message);
+    const char *message = "initializing 01\n";
+    write_to_console(message);
 
     while(1)
     {
