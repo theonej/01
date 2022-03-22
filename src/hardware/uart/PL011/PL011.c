@@ -3,7 +3,7 @@
 #include <math.h>
 #include "text/string.h"
 
-static uart_registers *uart0 = (uart_registers *)UART_ADDRESS;
+static uart_registers *_uart0 = (uart_registers *)UART_ADDRESS;
 
 const int MIN_DATA_BIT_SIZE = 5u;
 const int MAX_DATA_BIT_SIZE = 8u;
@@ -40,23 +40,23 @@ uart_status validate_config(uart_config *config)
 
 void disable_uart()
 {
-    uart0->CR &= ~CR_UARTEN;
+    _uart0->CR &= ~CR_UARTEN;
 }
 
 void enable_uart()
 {
-    uart0->CR |= CR_UARTEN;
+    _uart0->CR |= CR_UARTEN;
 }
 
 void finish_transmission()
 {
-    while (uart0->FR & FR_BUSY)
+    while (_uart0->FR & FR_BUSY)
         ;
 }
 
 void flush_fifo()
 {
-    uart0->LCRH &= ~LCRH_FEN;
+    _uart0->LCRH &= ~LCRH_FEN;
 }
 
 void set_baudrate(uart_config *config)
@@ -65,8 +65,8 @@ void set_baudrate(uart_config *config)
     double divisor = (double)REFCLOCK / (DIVISOR_MULTIPLIER * config->baudrate);
     fractional_part = modf(divisor, &int_part); // int part is set inside modf
 
-    uart0->IBRD = (uint16_t)int_part;
-    uart0->FBRD = (uint16_t)((fractional_part * FRACTIONAL_MULTIPLIER) + 0.5);
+    _uart0->IBRD = (uint16_t)int_part;
+    _uart0->FBRD = (uint16_t)((fractional_part * FRACTIONAL_MULTIPLIER) + 0.5);
 }
 
 int set_data_bits(uart_config *config, int lcrh)
@@ -126,7 +126,7 @@ void configure_line_control_register(uart_config *config)
     lcrh = set_stop_bits(config, lcrh);
     lcrh = enable_fifo(lcrh);
 
-    uart0->LCRH = lcrh;
+    _uart0->LCRH = lcrh;
 }
 
 uart_status PL001_configure(uart_config *config)
@@ -153,11 +153,11 @@ uart_status PL001_configure(uart_config *config)
 
 void uart_write_char(char c)
 {
-    while (uart0->FR & FR_TXFF);
+    while (_uart0->FR & FR_TXFF);
 
     if (c != '\0')
     {
-        uart0->DR = c;
+        _uart0->DR = c;
     }
 }
 
@@ -173,13 +173,13 @@ uart_status PL011_read_data(char *buffer)
 {
     uart_status status = UART_NO_DATA;
 
-    if (!(uart0->FR & FR_RXFE))
+    if (!(_uart0->FR & FR_RXFE))
     {
-        *buffer = uart0->DR & DR_DATA_MASK;
+        *buffer = _uart0->DR & DR_DATA_MASK;
         status = UART_OK;
-        if (uart0->RSRECR & RSRECR_ERR_MASK)
+        if (_uart0->RSRECR & RSRECR_ERR_MASK)
         {
-            uart0->RSRECR &= RSRECR_ERR_MASK;
+            _uart0->RSRECR &= RSRECR_ERR_MASK;
             status = UART_RECEIVE_ERROR;
         }
     }
