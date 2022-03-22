@@ -22,17 +22,16 @@ uart_status read_from_console(char *buffer)
     uart_status status;
 
     bool do_continue = true;
+    int buffer_index = 0;
     while (do_continue)
     {
         char c;
-        uint32_t buffer_index = 0u;
 
         status = _methods.read(&c);
         if (status != UART_OK && status != UART_NO_DATA)
         {
             write_to_console("There was an error reading from the console.  The error is: \n");
-
-            write_to_console("There was an error reading from the console.  The error is: \n");
+         
             char err[64];
             itoa(status, err);
             write_to_console(err);
@@ -44,10 +43,9 @@ uart_status read_from_console(char *buffer)
         {
             if (status == UART_OK)
             {
-                buffer[buffer_index] = c;
-                buffer_index++;
-                write_to_console(&c);
-                write_to_console(buffer);
+                buffer[buffer_index++] = c;
+        
+                 write_to_console(&c);
                 if (c == '\r')
                 {
                     buffer[buffer_index] = '\0';
